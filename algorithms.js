@@ -20,16 +20,16 @@ switch (n) {
     Print(Zadatak6());
     break;
   case 7:
-    Print(Zadatak7());
+    Zadatak7();
     break;
   case 8:
     Print(Zadatak8());
     break;
   case 9:
-    Print(Zadatak9());
+    Zadatak9();
     break;
   case 10:
-    Print(Zadatak10());
+    Zadatak10();
     break;
   default:
     break;
@@ -42,6 +42,12 @@ function Print(a) {
 function Print(a, b) {
   console.log(a);
   console.log(b);
+}
+
+function Print(a, b, c) {
+  console.log(a);
+  console.log(b);
+  console.log(c);
 }
 
 /*
@@ -80,7 +86,7 @@ function Zadatak1() {
     .sort((x, y) => -Math.abs(x.Price - avg) + Math.abs(y.Price - avg))
     .pop();
 
-  return avg, p;
+  return p;
 }
 
 /*
@@ -220,29 +226,138 @@ ZADATAK 5
 Korisnik redom upisuje imena, prezimena i bodove sportaša. Cilj je stvoriti 4 
 kategorije sportaša po broju bodova (stvorit ih na način da ide 0-25% osobe sa 
 maksimum bodova, 25-50%, 50-75%, 75-100%). Cilj je ispisati sportaše svake 
-kategorije, sortirane po prezimenu i da su napisani u formatu prezime ime.*/
+kategorije, sortirane po prezimenu i da su napisani u formatu prezime ime.
+*/
+function Output(array) {
+  let str = "";
+  array.forEach((obj) => {
+    str = str + obj.LastName + ", " + obj.Name + "\n";
+  });
+  return str;
+}
+
+function Zadatak5() {
+  const athlets = [];
+
+  do {
+    let Name = prompt("Ime");
+    let LastName = prompt("Prezime");
+    let Points = +prompt("Bodovi");
+    athlets.push({ Name, LastName, Points });
+    let cont = prompt("Želite li nastavit (da/ne)");
+    if (cont != "da") break;
+  } while (true);
+
+  const max = athlets.reduce((max, x) => Math.max(max, x.Points), 0);
+  const min = athlets.reduce((min, x) => Math.min(max, x.Points), 0);
+
+  str = "0-25%\n";
+  str =
+    str +
+    Output(
+      athlets
+        .filter((x) => x.Points >= min + ((max - min) / 4) * 3)
+        .sort((a, b) => a.LastName.localeCompare(b.LastName))
+    );
+  str = str + "25-50%\n";
+  str =
+    str +
+    Output(
+      athlets
+        .filter(
+          (x) =>
+            x.Points >= min + ((max - min) / 4) * 2 &&
+            x.Points < min + ((max - min) / 4) * 3
+        )
+        .sort((a, b) => a.LastName.localeCompare(b.LastName))
+    );
+  str = str + "50-75%\n";
+  str =
+    str +
+    Output(
+      athlets
+        .filter(
+          (x) =>
+            x.Points >= min + ((max - min) / 4) * 1 &&
+            x.Points < min + ((max - min) / 4) * 2
+        )
+        .sort((a, b) => a.LastName.localeCompare(b.LastName))
+    );
+  str = str + "75-100%\n";
+  str =
+    str +
+    Output(
+      athlets
+        .filter(
+          (x) => x.Points >= min && x.Points < min + ((max - min) / 4) * 1
+        )
+        .sort((a, b) => a.LastName.localeCompare(b.LastName))
+    );
+  return str;
+}
 
 /*
-
 ZADATAK 6
 Upisati ime, cijenu i dostupnost proizvoda. Ispisati indexe svih nedostupnih 
-proizvoda i napraviti novi niz sa dostupnim voćem. Sortirati ga po imenu cijeni, 
+proizvoda i napraviti novi niz sa dostupnim voćem. Sortirati ga po cijeni, 
 a ako je ista cijena po imenu voća te ispisati taj niz. Na kraju ispisati koliko 
 posto ukupne cijene svih proizvoda doprinosi nedostupno voće */
+function Sum(array) {
+  return array.reduce((acc, x) => acc + x.Price, 0);
+}
+
+function Zadatak6() {
+  const allFruit = [];
+  let i = 0;
+  let str = "Nedostupni indeksi: ";
+  do {
+    let Name = prompt("Ime");
+    let Price = +prompt("Cijena");
+    let IsAvailable = +prompt("Unesi 1 ako je dostupno, tj 0 ako nije.");
+    if (IsAvailable === 0) str = str + i + ", ";
+    allFruit.push({ Name, Price, IsAvailable });
+    let cont = prompt("Želite li nastavit (da/ne)");
+    if (cont != "da") break;
+  } while (true);
+  const availableFruit = allFruit.filter((x) => x.IsAvailable !== 0);
+  availableFruit
+    .sort((x, y) => x.Name.localeCompare(y.Name))
+    .sort((x, y) => x.Price - y.Price);
+  const num = Sum(allFruit) - Sum(availableFruit) / Sum(allFruit);
+  console.log(str);
+  console.log(availableFruit);
+  console.log(num);
+}
 
 /*
-
 ZADATAK 7
 Isti unos kao u 6. zadatku. Iz niza voća napraviti novi niz gdje svim dostupni 
 voćima je boja crvena i svim nedostupnim žuta, sortirati ih po boji pa po imenu i 
 ispisati niz.*/
+function Zadatak7() {
+  const allFruit = [];
+  do {
+    let Name = prompt("Ime");
+    let Price = +prompt("Cijena");
+    let IsAvailable = +prompt("Unesi 1 ako je dostupno, tj 0 ako nije.");
+    allFruit.push({ Name, Price, IsAvailable, Colour: "" });
+    let cont = prompt("Želite li nastavit (da/ne)");
+    if (cont != "da") break;
+  } while (true);
+  allFruit.filter((x) => x.IsAvailable === 1).map((x) => (x.Colour = "red"));
+  allFruit.filter((x) => x.IsAvailable === 0).map((x) => (x.Colour = "yellow"));
+  allFruit
+    .sort((x, y) => x.Name.localeCompare(y.Name))
+    .sort((x, y) => x.Colour.localeCompare(y.Colour));
+  return allFruit;
+}
 
 /*
 ZADATAK 8
 Riješi problem Gaussove dosjetke koristeći petlje i JS ugrađene funkcije nad 
 nizovima (zabranjeno korištenje formule). Sami napravite array s prvih 100 prirodnih 
 brojeva (bonus points ako napravit bez petlje)*/
-function Gauss(n, array) {
+function FirstNNumbers(n, array) {
   if (n === 1) {
     array.push(1);
     return array.sort((x, y) => x - y);
@@ -254,8 +369,12 @@ function Gauss(n, array) {
 
 function Zadatak8() {
   let num = [];
-  Gauss(100, num);
-  console.log(num);
+  /*
+  Općeniti slučaj
+  const number = +prompt("Do kojeg broja želiš zbrajati prorodne brojeve od 1?");
+  FirstNNumbers(number,num);
+  */
+  FirstNNumbers(100, num);
   return num.reduce((acc, x) => acc + x, 0);
 }
 
@@ -263,9 +382,51 @@ function Zadatak8() {
 ZADATAK 9
 Traži unos imena osoba, sortiraj ih i filtriraj da budu imena sa više od 5 slova 
 te ih ispiši u csv formatu (comma seperated values)*/
+function Zadatak9() {
+  const people = [];
+  do {
+    let Name = prompt("Ime");
+    let LastName = prompt("Prezime");
+    people.push({ Name, LastName });
+    let cont = prompt("Želite li nastavit (da/ne)");
+    if (cont != "da") break;
+  } while (true);
+  people
+    .sort((x, y) => x.LastName.localeCompare(y.LastName))
+    .sort((x, y) => x.Name.localeCompare(y.Name))
+    .filter((x) => x.Name.length >= 5)
+    .forEach((x) => console.log(x.Name + "," + x.LastName));
+}
 
 /*
 ZADATAK 10
 Isti unos kao u četvrtom zadatku. Neka program izračuna najmanje moguće novaca koliko 
 treba da se kupi sve boje voća barem jedanput. Ispis je konačna cijena i svi kupljeni 
 proizvodi sortirani po količini slova u imenu.*/
+function Zadatak10() {
+  const fruit = [];
+  const colour = [];
+  do {
+    let Name = prompt("Ime");
+    let Price = +prompt("Cijena");
+    let Colour = prompt("Boja");
+    fruit.push({ Name, Price, Colour });
+    let cont = prompt("Želite li nastavit (da/ne)");
+    if (cont != "da") break;
+  } while (true);
+
+  const array = [];
+  let minSum = 0;
+  fruit.sort((x, y) => x.Price - y.Price);
+
+  fruit.forEach((x) => {
+    if (colour.findIndex((val) => val.Colour === x.Colour) === -1) {
+      colour.push({ Colour: x.Colour, Name: x.Name });
+      minSum = minSum + x.Price;
+    }
+  });
+
+  colour.sort((a, b) => a.Name.length - b.Name.length);
+  console.log(colour);
+  console.log(minSum);
+}
